@@ -31,7 +31,14 @@ def get_entry(title):
     entry exists, the function returns None.
     """
     try:
-        f = default_storage.open(f"entries/{title}.md")
-        return f.read().decode("utf-8")
+        f = default_storage.open(f"entries/{title}.md", 'r')
+        content = ""
+        for line in f:
+            if line.startswith("#"):
+                line = line.strip()
+                continue
+            content += line
+            print(line)
+        return content
     except FileNotFoundError:
         return None

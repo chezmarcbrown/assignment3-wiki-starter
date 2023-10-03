@@ -4,13 +4,17 @@
     Encyclopedia
 {% endblock %}
 
+{% block nav %}
+    <div>
+        <a href="{% url 'Edit' %}">
+            Edit Page
+        </a>
+    </div>
+{% endblock %}
+
 {% block body %}
     <h1>CSS</h1>
 
-    <ul>
-        {% for entry in entries %}
-            <li></li>
-        {% endfor %}
-    </ul>
+    <p>{{entry}}</p>
 
 {% endblock %}
