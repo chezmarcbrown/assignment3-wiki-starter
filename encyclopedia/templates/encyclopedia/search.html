@@ -6,6 +6,9 @@
 
 {% block body %}
     <h1>{{title}}</h1>
-    <p>{{content}}</p>
+
+    {% for entry in content %}
+        <li><a href="{% url 'entry' title=entry %}">{{entry}}</a></li>
+    {% endfor %}
 
 {% endblock %}

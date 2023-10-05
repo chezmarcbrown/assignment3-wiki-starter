@@ -22,18 +22,17 @@ def entry(request, title):
 def search(request):
     if request.method == 'POST':
         search = request.POST['q'].strip()
-        content = util.convert_to_html(search)
         title = f"Search Results: \"{search}\""
+        
+        entries = util.list_entries()
+        search_results = []
+        for entry in entries:
+            if search.lower() in entry.lower():
+                search_results.append(entry)
+        content = search_results
 
-        if content == None:
-            content = f"No results found for {search}."
-        else:
-            entries = util.list_entries()
-            search_results = []
-            for entry in entries:
-                if search.lower() in entry.lower():
-                    search_results.append(entry)
-            content = search_results
+        if search_results.count == 0:
+            content = f"No results found for {search}"
 
         return render(request, "encyclopedia/search.html", {
             "title": title,
