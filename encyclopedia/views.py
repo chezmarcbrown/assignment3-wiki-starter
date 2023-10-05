@@ -16,6 +16,7 @@ def entry(request, title):
         })
     else:
         return render(request, "encyclopedia/entry.html", {
+            "title": title,
             "content": content
         })
     
@@ -35,6 +36,28 @@ def search(request):
             content = f"No results found for {search}"
 
         return render(request, "encyclopedia/search.html", {
+            "title": title,
+            "content": content
+        })
+    
+def edit(request):
+    if request.method == "POST":
+        title = request.POST['title']
+        content = util.get_entry(title)
+
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+            "content": content
+        })
+    
+def save(request):
+    if request.method == "POST":
+        title = request.POST['title']
+        content = request.POST['content']
+        util.save_entry(title, content)
+        
+        content = util.convert_to_html(title)
+        return render(request, "encyclopedia/entry.html", {
             "title": title,
             "content": content
         })

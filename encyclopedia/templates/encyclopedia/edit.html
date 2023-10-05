@@ -5,6 +5,17 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Edit {{entry}} Entry</h1>
+    <h1>Edit {{title}} Entry</h1>
+
+    <form action="{% url 'save' %}" method="POST">{% csrf_token %}
+        <input type="hidden" name="title" value="{{title}}">
+        <br/>
+        <br/>
+        <textarea name="content">{{content | safe}}</textarea>
+        <br/>
+        <br/>
+        <input class="btn" type="reset" value="Reset">
+        <input class="btn" type="submit" value="Save">
+    </form>
 
 {% endblock %}

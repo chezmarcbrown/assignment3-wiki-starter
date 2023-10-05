@@ -7,7 +7,10 @@
 {% block body %}
     <p>{{content | safe}}</p>
     <div>
-        <button>Update Contents</button>
+        <form action="{% url 'edit' %}" method="POST">{% csrf_token %}
+            <input type="hidden" name="title" value="{{title}}">
+            <input class="btn" type="submit" value="Update Contents">
+        </form>
     </div>
 
 {% endblock %}
