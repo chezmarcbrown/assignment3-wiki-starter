@@ -14,6 +14,7 @@
         <textarea name="content">{{content | safe}}</textarea>
         <br/>
         <br/>
+        <a class="btn" href="{% url 'entry' title=title %}">Cancel</a>
         <input class="btn" type="reset" value="Reset">
         <input class="btn" type="submit" value="Save">
     </form>

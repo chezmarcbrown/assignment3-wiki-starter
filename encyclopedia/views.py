@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from . import util
+import random
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -59,5 +60,35 @@ def save(request):
         content = util.convert_to_html(title)
         return render(request, "encyclopedia/entry.html", {
             "title": title,
+            "content": content
+        })
+
+def add(request):
+    if request.method == "GET":
+        return render(request, "encyclopedia/add.html")
+    elif request.method == "POST":
+        title = request.POST['title']
+        content = request.POST['content']
+        isExists = util.get_entry(title)
+
+        if isExists is not None:
+            return render(request, "encyclopedia/error.html", {
+            "title": "Error",
+            "content": f"Page \"{title}\" already exists."
+        })
+        else:
+            util.save_entry(title, content)
+            content = util.convert_to_html(title)
+            return render(request, "encyclopedia/entry.html", {
+                "title": title,
+                "content": content
+            })
+        
+def rand(request):
+    entries = util.list_entries()
+    random_entry = random.choice(entries)
+    content = util.convert_to_html(random_entry)
+    return render(request, "encyclopedia/entry.html", {
+            "title": random_entry,
             "content": content
         })
