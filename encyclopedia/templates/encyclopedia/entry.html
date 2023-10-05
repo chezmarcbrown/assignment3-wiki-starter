@@ -4,15 +4,9 @@
     Encyclopedia
 {% endblock %}
 
-{% block nav %}
-    <div>
-        Edit Page
-    </div>
-{% endblock %}
-
 {% block body %}
-    <h1>Python</h1>
-
-    <p>{{entry}}</p>
+    <p>{{content | safe}}</p>
+    <div>
+    </div>
 
 {% endblock %}

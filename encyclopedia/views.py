@@ -2,36 +2,40 @@ from django.shortcuts import render
 
 from . import util
 
-
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
 
-def css(request):
-    return render(request, "encyclopedia/css.html", {
-        "entry": util.get_entry("css")
+def entry(request, title):
+    content = util.convert_to_html(title)
+    if content == None:
+        return render(request, "encyclopedia/error.html", {
+            "title": "Error",
+            "content": "Page does not exist."
         })
-
-def django(request):
-    return render(request, "encyclopedia/django.html", {
-        "entry": util.get_entry("django")
+    else:
+        return render(request, "encyclopedia/entry.html", {
+            "content": content
         })
+    
+def search(request):
+    if request.method == 'POST':
+        search = request.POST['q'].strip()
+        content = util.convert_to_html(search)
+        title = f"Search Results: \"{search}\""
 
-def git(request):
-    return render(request, "encyclopedia/git.html", {
-        "entry": util.get_entry("git")
+        if content == None:
+            content = f"No results found for {search}."
+        else:
+            entries = util.list_entries()
+            search_results = []
+            for entry in entries:
+                if search.lower() in entry.lower():
+                    search_results.append(entry)
+            content = search_results
+
+        return render(request, "encyclopedia/search.html", {
+            "title": title,
+            "content": content
         })
-
-def html(request):
-    return render(request, "encyclopedia/html.html", {
-        "entry": util.get_entry("html")
-        })
-
-def python(request):
-    return render(request, "encyclopedia/python.html", {
-        "entry": util.get_entry("python")
-        })
-
-def edit(request):
-    return render(request, "encyclopedia/edit.html")
