@@ -13,7 +13,7 @@ def entry(request, title):
     content = util.get_entry(title)
     if content:
         html_content = markdown(content)
-        return render(request, "{encyclopedia/entry.html", {
+        return render(request, "encyclopedia/entry.html", {
             'title': title, 'content': html_content
         })
     else:
