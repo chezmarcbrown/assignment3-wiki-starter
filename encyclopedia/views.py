@@ -50,14 +50,3 @@ def new_entry(request):
 
     return render(request, 'encyclopedia/new_entry.html')
 
-def random_entry(request, title):
-    content = util.get_entry(title)
-    if content:
-        html_content = markdown(content)
-        return render(request, "encyclopedia/entry.html", {
-            'title': title, 'content': html_content
-        })
-    else:
-        return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
-    })
