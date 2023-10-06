@@ -1,0 +1,1 @@
+The terminal is an interface that the user can use to issue commands to the system.
