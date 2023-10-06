@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from markdown2 import markdown
 from .util import get_entry, save_entry
+import random
 
 from . import util
 
@@ -49,4 +50,9 @@ def new_entry(request):
         return redirect('entry', title=title)
 
     return render(request, 'encyclopedia/new_entry.html')
+
+def random_entry(request):
+    entries = util.list_entries()
+    random_entry = random.choice(entries)
+    return redirect('entry', title=random_entry)
 
