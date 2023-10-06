@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from markdown2 import markdown
+from .util import get_entry, save_entry
 
 from . import util
 
@@ -29,3 +30,34 @@ def search(request):
     else:
         results = [entry for entry in entries if query.lower() in entry.lower()]
         return render(request, 'encyclopedia/search.html', {'results': results})
+    
+def new_entry(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        content = request.POST['content']
+
+        if get_entry(title):
+            context = {
+                'error': 'An entry with this title already exists. Please choose a different title.',
+                'title': title,
+                'content': content
+            }
+            return render(request, 'encyclopedia/new_entry.html', context)
+
+        save_entry(title, content)
+        
+        return redirect('entry', title=title)
+
+    return render(request, 'encyclopedia/new_entry.html')
+
+def random_entry(request, title):
+    content = util.get_entry(title)
+    if content:
+        html_content = markdown(content)
+        return render(request, "encyclopedia/entry.html", {
+            'title': title, 'content': html_content
+        })
+    else:
+        return render(request, "encyclopedia/index.html", {
+        "entries": util.list_entries()
+    })
