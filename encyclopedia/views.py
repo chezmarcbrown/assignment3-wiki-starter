@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from . import util
 import random
@@ -10,6 +10,7 @@ def index(request):
 
 def entry(request, title):
     content = util.convert_to_html(title)
+    print("In entry " + title)
     if content == None:
         return render(request, "encyclopedia/error.html", {
             "title": "Error",
@@ -87,8 +88,5 @@ def add(request):
 def rand(request):
     entries = util.list_entries()
     random_entry = random.choice(entries)
-    content = util.convert_to_html(random_entry)
-    return render(request, "encyclopedia/entry.html", {
-            "title": random_entry,
-            "content": content
-        })
+    print("In rand " + random_entry)
+    return redirect(entry, random_entry)
