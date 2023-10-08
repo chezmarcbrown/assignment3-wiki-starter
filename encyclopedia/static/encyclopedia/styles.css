@@ -35,3 +35,22 @@ textarea {
 .sidebar h2 {
     margin-top: 5px;
 }
+
+.btn {
+    text-decoration: none;
+    border-color: transparent;
+    color: rgb(242, 240, 237);
+    background-color: rgb(84, 92, 96);
+    border-color: rgb(99, 91, 79);
+}
+
+.btn:hover {
+    color: #fff;
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+textarea {
+    width: 50%;
+    height: 50em;
+}
