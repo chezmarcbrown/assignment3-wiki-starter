@@ -4,15 +4,14 @@ from . import util
 from django.http import Http404
 from django import forms
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from random import choice
+
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
 
-class UpdateForm(forms.Form):
-    content = forms.CharField(widget=forms.Textarea(attrs={"rows": 10, "cols": 80}))
 
 def entry(request, title):
     
@@ -46,12 +45,12 @@ def search(request):
         return redirect('index')
 
 def edit(request):
-    if request.method == "POST":
+    if request.method == "POST":#save
         title = request.POST.get('title')
         content = request.POST.get('content')
         util.save_entry(title, content)
         return HttpResponseRedirect(f"wiki/{ title }")
-    else:
+    else:# display
         title = request.GET.get('title')
         content = util.get_entry(title)
         return render(request, 'encyclopedia/edit.html', {
@@ -60,8 +59,20 @@ def edit(request):
         })
 
 def create(request):
-    pass
+    if request.method == "POST":# once there is input, save it and redirect to display it
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        util.save_entry(title, content)
+        return HttpResponseRedirect(f"wiki/{ title }")
+    else:#when there is nothind send to html file for form input
+        return render(request, 'encyclopedia/create.html')
 
 def random(request):
-    pass
+    list = util.list_entries()#list of all entries
+    title = choice(list)#get a random one
+    content = util.get_entry(title)#get content for that entry
+    return render(request, 'encyclopedia/entry.html', {#display
+        'title': title,
+        'content': content
+    })
 
