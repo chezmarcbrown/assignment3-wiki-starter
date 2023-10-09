@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-
+import markdown2
 from . import util
 from django.http import Http404
 from django import forms
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -19,26 +21,10 @@ def entry(request, title):
     if entry_content is None:
         raise Http404("Entry not found")
 
-    # Check if the user wants to edit the entry
-    if request.method == "POST":
-        form = UpdateForm(request.POST)
-        if form.is_valid():
-            content = form.cleaned_data["content"]
-            util.save_entry(title, content)
-            return render(request, "encyclopedia/entry.html", {
-                "title": title,
-                "content": content,
-                "edit_form": form,
-            })
-
-    # Render the entry page with content
-    else:
-        form = UpdateForm(initial={"content": entry_content})
-        return render(request, "encyclopedia/entry.html", {
-            "title": title,
-            "content": entry_content,
-            "edit_form": form,
-        })
+    return render(request, 'encyclopedia/entry.html', {
+        "title": title,
+        "content": markdown2.markdown(entry_content)
+    })
     
 def search(request):
     query = request.GET.get("q")
@@ -58,3 +44,24 @@ def search(request):
         })
     else:
         return redirect('index')
+
+def edit(request):
+    if request.method == "POST":
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        util.save_entry(title, content)
+        return HttpResponseRedirect(f"wiki/{ title }")
+    else:
+        title = request.GET.get('title')
+        content = util.get_entry(title)
+        return render(request, 'encyclopedia/edit.html', {
+            'title': title,
+            'content': content
+        })
+
+def create(request):
+    pass
+
+def random(request):
+    pass
+
