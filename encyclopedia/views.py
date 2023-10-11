@@ -36,3 +36,13 @@ def newpage(request):
     "GET": render(request, "encyclopedia/create_new.html"),
     }.get(request.method)
     return response
+
+def search(request):
+    if request.method == "POST":
+        entry_search = request.POST['q']
+        html_content = convert_to_html(entry_search)
+        if html_content is not None:
+            return render(request, "encyclopedia/entry.html", {
+                "title": entry_search,
+                "content": html_content
+            })
