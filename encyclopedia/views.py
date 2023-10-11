@@ -30,12 +30,6 @@ def entry(request, title):
             "title": title,
             "content": html_content
         })
-    
-def newpage(request):
-    response = {
-    "GET": render(request, "encyclopedia/create_new.html"),
-    }.get(request.method)
-    return response
 
 def search(request):
     if request.method == "POST":
@@ -56,7 +50,7 @@ def search(request):
                 "recommendation": recommendation
             })    
 
-def add(request):
+def newpage(request):
     if request.method == "GET":
         return render(request, "encyclopedia/create_new.html")
     
