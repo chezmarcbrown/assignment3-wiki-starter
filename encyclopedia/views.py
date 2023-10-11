@@ -41,7 +41,7 @@ def search(request):
                 "content": html_content
             })
         else :
-            allEntries = util.list.entries()
+            allEntries = util.list_entries()
             recommendation = []
             for entry in allEntries:
                 if entry_search.lower() in entry.lower():
