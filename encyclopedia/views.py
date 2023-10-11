@@ -1,8 +1,6 @@
 from django.shortcuts import render
 import markdown
 
-# Small change
-
 from . import util
 
 def convert_to_html(page_title):
@@ -12,7 +10,6 @@ def convert_to_html(page_title):
         return None
     else:
         return markdowner.convert(page)
-
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -37,6 +34,12 @@ def newpage(request):
     }.get(request.method)
     return response
 
+def random(request):
+    response = {
+    "GET": render(request, "encyclopedia/random_page.html"),
+    }.get(request.method)
+    return response
+
 def search(request):
     if request.method == "POST":
         entry_search = request.POST['q']
@@ -45,4 +48,23 @@ def search(request):
             return render(request, "encyclopedia/entry.html", {
                 "title": entry_search,
                 "content": html_content
+            })
+
+def add(request):
+    if request.method == "GET":
+        return render(request, "encyclopedia/create_new.html")
+    else:
+        page = request.POST['page']
+        info = request.POST['info']
+        existingPage = util.get_entry(page)
+        if existingPage != None:
+            return render(request, "encyclopedia/error.html", {
+                "message": "This entry already exists"
+            })
+        else:
+            util.save_entry(page, info)
+            converted_info = convert_to_html(page)
+            return render(request, "encyclopedia/entry.html", {
+                "page": page,
+                "info": converted_info
             })
