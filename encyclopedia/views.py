@@ -32,4 +32,7 @@ def entry(request, title):
         })
     
 def newpage(request):
-    return
+    response = {
+    "GET": render(request, "encyclopedia/create_new.html"),
+    }.get(request.method)
+    return response
