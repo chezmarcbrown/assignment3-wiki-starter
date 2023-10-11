@@ -68,18 +68,7 @@ def create(request):
         return render(request, 'encyclopedia/create.html')
 
 def random(request):
-    
-    if 'title' not in request.session:
-        list = util.list_entries()#list of all entries
-        title = choice(list)#get a random one
-        request.session['title'] = title
-    else:
-        title = request.session['title']
-
-    content = util.get_entry(title)#get content for that entry
-    return render(request, 'encyclopedia/entry.html', {#display
-        'title': title,
-        'content': content
-
-    })
+    list = util.list_entries()
+    title = choice(list)
+    return HttpResponseRedirect(f"wiki/{ title }")
 
