@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import markdown
+import random
 
 # Small change
 
@@ -46,3 +47,21 @@ def search(request):
                 "title": entry_search,
                 "content": html_content
             })
+        else :
+            allEntries = util.list.entries()
+            recommendation = []
+            for entry in allEntries:
+                if entry_search.lower() in entry.lower():
+                    recommendation.append(entry)
+            return render(request, "encyclopedia/search.html", {
+                "recommendation": recommendation
+            })
+            
+def rand(request):
+    allEntries = util.list_entries()
+    rand_entry = random.choice(allEntries)
+    html_content = convert_to_html(rand_entry)
+    return render(request, "encyclopedia/entry.html", {
+        "title": rand_entry,
+        "content": html_content
+    })
