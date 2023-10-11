@@ -19,5 +19,17 @@ def index(request):
         "entries": util.list_entries()
     })
 
+def entry(request, title):
+    html_content = convert_to_html(title)
+    if html_content == None:
+        return render(request, "encyclopedia/error.html", {
+            "message": "This entry does not exist"
+        })
+    else:
+        return render(request, "encyclopedia/entry.html", {
+            "title": title,
+            "content": html_content
+        })
+    
 def newpage(request):
     return
