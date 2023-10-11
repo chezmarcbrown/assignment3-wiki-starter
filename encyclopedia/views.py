@@ -45,7 +45,7 @@ def new_entry(request):
             }
             return render(request, 'encyclopedia/new_entry.html', context)
 
-        save_entry(title, content)
+        util.save_entry(title, content)
         
         return redirect('entry', title=title)
 
