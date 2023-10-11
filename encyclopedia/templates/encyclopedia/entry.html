@@ -12,5 +12,8 @@
             {{ content|safe }}
         </p>
     </div>
+    <div>
+        <a href="{% url 'edit-entry' title=title %}" class="btn btn-primary">Edit</a>
+    </div>
 
 {% endblock %}
