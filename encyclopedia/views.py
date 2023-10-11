@@ -31,7 +31,9 @@ def search(request):
         item = request.POST['q'].strip()
 
         pages = util.list_entries()
-        if item in pages:
+        # Credit to this stack overflow answer for case insensitive string matching
+        # https://stackoverflow.com/questions/3627784/case-insensitive-in
+        if item.lower() in map(str.lower, pages):
             return redirect("entry", title=item)
         
         return render(
