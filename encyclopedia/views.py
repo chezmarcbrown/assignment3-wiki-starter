@@ -76,3 +76,22 @@ def rand(request):
         "title": rand_entry,
         "content": html_content
     })
+
+def edit(request):
+    if request.method == 'POST':
+        title = request.POST['enter_title']
+        content = util.get_entry(title)
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+            "content": content
+        })
+    
+def save_edit(request):
+    if request.method =="POST":
+        title = request.POST['title']
+        content = request.POST['content']
+        util.save_entry(title, content)
+        return render(request, "encyclopedia/entry.html", {
+        "title": title,
+        "content": content
+    })
