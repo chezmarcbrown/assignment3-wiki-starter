@@ -2,17 +2,15 @@ from django.shortcuts import render
 import markdown
 import random
 
-# Small change
-
 from . import util
 
 def convert_to_html(page_title):
     page = util.get_entry(page_title)
-    markdowner = markdown.Markdown()
+    converter = markdown.Markdown()
     if page == None:
         return None
     else:
-        return markdowner.convert(page)
+        return converter.convert(page)
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -20,31 +18,31 @@ def index(request):
     })
 
 def entry(request, title):
-    html_content = convert_to_html(title)
-    if html_content == None:
+    body = convert_to_html(title)
+    if body == None:
         return render(request, "encyclopedia/error.html", {
             "message": "This entry does not exist"
         })
     else:
         return render(request, "encyclopedia/entry.html", {
             "title": title,
-            "content": html_content
+            "content": body
         })
 
 def search(request):
     if request.method == "POST":
-        entry_search = request.POST['q']
-        html_content = convert_to_html(entry_search)
-        if html_content is not None:
+        search_query = request.POST['q']
+        body = convert_to_html(search_query)
+        if body is not None:
             return render(request, "encyclopedia/entry.html", {
-                "title": entry_search,
-                "content": html_content
+                "title": search_query,
+                "content": body
             })
         else :
-            allEntries = util.list_entries()
+            entries = util.list_entries()
             recommendation = []
-            for entry in allEntries:
-                if entry_search.lower() in entry.lower():
+            for entry in entries:
+                if search_query.lower() in entry.lower():
                     recommendation.append(entry)
             return render(request, "encyclopedia/search.html", {
                 "recommendation": recommendation
@@ -68,16 +66,16 @@ def newpage(request):
                       {"title": page, "content": converted_info})
 
             
-def rand(request):
-    allEntries = util.list_entries()
-    rand_entry = random.choice(allEntries)
-    html_content = convert_to_html(rand_entry)
+def get_random(request):
+    entries = util.list_entries()
+    rand_entry = random.choice(entries)
+    body = convert_to_html(rand_entry)
     return render(request, "encyclopedia/entry.html", {
         "title": rand_entry,
-        "content": html_content
+        "content": body
     })
 
-def edit(request):
+def edit_page(request):
     if request.method == 'POST':
         title = request.POST['enter_title']
         content = util.get_entry(title)
@@ -86,12 +84,12 @@ def edit(request):
             "content": content
         })
     
-def save_edit(request):
+def save_page(request):
     if request.method =="POST":
         title = request.POST['title']
-        content = request.POST['content']
-        util.save_entry(title, content)
+        body = request.POST['content']
+        util.save_entry(title, body)
         return render(request, "encyclopedia/entry.html", {
         "title": title,
-        "content": content
+        "content": body
     })
