@@ -59,21 +59,19 @@ def search(request):
 def add(request):
     if request.method == "GET":
         return render(request, "encyclopedia/create_new.html")
-    else:
-        page = request.POST['page']
-        info = request.POST['info']
-        existingPage = util.get_entry(page)
-        if existingPage != None:
-            return render(request, "encyclopedia/error.html", {
-                "message": "This entry already exists"
-            })
-        else:
-            util.save_entry(page, info)
-            converted_info = convert_to_html(page)
-            return render(request, "encyclopedia/entry.html", {
-                "page": page,
-                "info": converted_info
-            })
+    
+    if request.method == "POST":
+        page = request.POST.get('page')
+        info = request.POST.get('info')
+        
+        if util.get_entry(page):
+            return render(request, "encyclopedia/error.html", 
+                          {"message": "This entry already exists"})
+
+        util.save_entry(page, info)
+        converted_info = convert_to_html(page)
+        return render(request, "encyclopedia/entry.html", 
+                      {"page": page, "info": converted_info})
 
             
 def rand(request):

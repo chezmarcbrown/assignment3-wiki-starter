@@ -2,5 +2,11 @@
 
 {% block body %}
 <h1>New Page</h1>
-
+<form action="{% url 'newpage' %}" method=""POST>
+    <label> Page title:</label</label></form></br>
+    <input type="text" name="page" placeholder="Enter a new title"></br>
+    <label>Info:</label></br>
+    <textarea name="info" placeholder="Enter info on the topic"></textarea></br>
+    <input type="submit" value="New page" class="btn btn-primary"></br>
+</form>
 {% endblock %}
