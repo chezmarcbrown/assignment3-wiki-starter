@@ -1,11 +1,13 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-{{title}}
+Encyclopedia
 {% endblock %}
 
 {% block body %}
+<h1>{{title | safe}}</h1>
+    <p>{{content | safe}}</p>
 
-    <h2>{{content | safe}}</h2>
+    <form action="{% url 'edit'}" method="POST"></form>
 
 {% endblock %}

@@ -65,7 +65,7 @@ def newpage(request):
         util.save_entry(page, info)
         converted_info = convert_to_html(page)
         return render(request, "encyclopedia/entry.html", 
-                      {"page": page, "info": converted_info})
+                      {"title": page, "content": converted_info})
 
             
 def rand(request):
