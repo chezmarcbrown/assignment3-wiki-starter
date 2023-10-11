@@ -53,7 +53,6 @@ def new_entry(request):
 
 def edit_entry(request, title):
     if request.method == 'POST':
-        title = request.POST['title']
         content = request.POST['content']
         util.save_entry(title, content)
         return redirect('entry', title=title)
