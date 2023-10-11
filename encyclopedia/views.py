@@ -1,5 +1,8 @@
 from django.shortcuts import render
 import markdown
+import random
+
+# Small change
 
 from . import util
 
@@ -34,12 +37,6 @@ def newpage(request):
     }.get(request.method)
     return response
 
-def random(request):
-    response = {
-    "GET": render(request, "encyclopedia/random_page.html"),
-    }.get(request.method)
-    return response
-
 def search(request):
     if request.method == "POST":
         entry_search = request.POST['q']
@@ -49,6 +46,15 @@ def search(request):
                 "title": entry_search,
                 "content": html_content
             })
+        else :
+            allEntries = util.list.entries()
+            recommendation = []
+            for entry in allEntries:
+                if entry_search.lower() in entry.lower():
+                    recommendation.append(entry)
+            return render(request, "encyclopedia/search.html", {
+                "recommendation": recommendation
+            })    
 
 def add(request):
     if request.method == "GET":
@@ -68,3 +74,13 @@ def add(request):
                 "page": page,
                 "info": converted_info
             })
+
+            
+def rand(request):
+    allEntries = util.list_entries()
+    rand_entry = random.choice(allEntries)
+    html_content = convert_to_html(rand_entry)
+    return render(request, "encyclopedia/entry.html", {
+        "title": rand_entry,
+        "content": html_content
+    })
