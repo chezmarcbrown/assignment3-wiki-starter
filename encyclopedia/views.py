@@ -68,11 +68,18 @@ def create(request):
         return render(request, 'encyclopedia/create.html')
 
 def random(request):
-    list = util.list_entries()#list of all entries
-    title = choice(list)#get a random one
+    
+    if 'title' not in request.session:
+        list = util.list_entries()#list of all entries
+        title = choice(list)#get a random one
+        request.session['title'] = title
+    else:
+        title = request.session['title']
+
     content = util.get_entry(title)#get content for that entry
     return render(request, 'encyclopedia/entry.html', {#display
         'title': title,
         'content': content
+
     })
 
