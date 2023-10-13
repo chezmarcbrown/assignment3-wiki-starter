@@ -5,7 +5,7 @@ from django.http import Http404
 from django import forms
 from django.http import HttpResponseRedirect
 from random import choice
-
+from django.urls import reverse
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -18,6 +18,7 @@ def entry(request, title):
     entry_content = util.get_entry(title)
     
     if entry_content is None:
+        # very cool use of the exception!
         raise Http404("Entry not found")
 
     return render(request, 'encyclopedia/entry.html', {
@@ -32,6 +33,7 @@ def search(request):
         # Check if the query matches the name of an encyclopedia entry
         entry_content = util.get_entry(query)
         if entry_content is not None:
+            # great use of redirect!
             return redirect('entry', title=query)
         
         # If the query does not match an entry, find entries with the query as a substring
@@ -44,14 +46,13 @@ def search(request):
     else:
         return redirect('index')
 
-def edit(request):
+def edit(request, title):
     if request.method == "POST":#save
-        title = request.POST.get('title')
         content = request.POST.get('content')
         util.save_entry(title, content)
-        return HttpResponseRedirect(f"wiki/{ title }")
+        #return HttpResponseRedirect(f"/wiki/{ title }")
+        return redirect('entry', title)
     else:# display
-        title = request.GET.get('title')
         content = util.get_entry(title)
         return render(request, 'encyclopedia/edit.html', {
             'title': title,
@@ -63,12 +64,25 @@ def create(request):
         title = request.POST.get('title')
         content = request.POST.get('content')
         util.save_entry(title, content)
-        return HttpResponseRedirect(f"wiki/{ title }")
+        #return HttpResponseRedirect(f"wiki/{ title }")
+        return HttpResponseRedirect(reverse('entry', kwargs={'title':title}))
     else:#when there is nothind send to html file for form input
         return render(request, 'encyclopedia/create.html')
+
+def create(request):
+    error_message = None
+    if request.method == "POST":# once there is input, save it and redirect to display it
+        title = request.POST.get('title')
+        if not util.get_entry(title):
+            content = request.POST.get('content')
+            util.save_entry(title, content)
+            return redirect('entry', title)
+        error_message = 'Entry already exists'
+    return render(request, 'encyclopedia/create.html', {'error_message': error_message})
 
 def random(request):
     list = util.list_entries()
     title = choice(list)
-    return HttpResponseRedirect(f"wiki/{ title }")
+    return redirect('entry', title)
+    #return HttpResponseRedirect(f"wiki/{ title }")
 

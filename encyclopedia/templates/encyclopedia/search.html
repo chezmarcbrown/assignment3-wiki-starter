@@ -10,6 +10,8 @@
     <ul>
         {% for entry in results %}
             <li><a href="{% url 'entry' entry %}">{{ entry }}</a></li>
+        {% empty %}
+            <p>There are no entries that match!</p>
         {% endfor %}
     </ul>
     
