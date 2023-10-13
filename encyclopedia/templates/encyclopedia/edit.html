@@ -7,10 +7,7 @@
 {% block body %}
     <h1>Edit {{title}} Entry</h1>
 
-    <form action="{% url 'save' %}" method="POST">{% csrf_token %}
-        <input type="hidden" name="title" value="{{title}}">
-        <br/>
-        <br/>
+    <form action="{% url 'edit' title %}" method="POST">{% csrf_token %}
         <textarea name="content">{{content | safe}}</textarea>
         <br/>
         <br/>

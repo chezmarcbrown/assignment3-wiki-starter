@@ -7,8 +7,10 @@
 {% block body %}
     <h1>{{title}}</h1>
 
-    {% for entry in content %}
+    {% for entry in entries %}
         <li><a href="{% url 'entry' title=entry %}">{{entry}}</a></li>
+    {% empty %}
+        <p>No results for search.</p>
     {% endfor %}
 
 {% endblock %}

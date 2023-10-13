@@ -7,8 +7,7 @@
 {% block body %}
     <p>{{content | safe}}</p>
     <div>
-        <form action="{% url 'edit' %}" method="POST">{% csrf_token %}
-            <input type="hidden" name="title" value="{{title}}">
+        <form action="{% url 'edit' title %}" method="GET">
             <input class="btn" type="submit" value="Update Contents">
         </form>
     </div>
