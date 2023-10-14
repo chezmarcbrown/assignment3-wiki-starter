@@ -28,27 +28,29 @@ def index(request):
 def create(request):
     if request.method == "POST":
         new_entry = CreateForm(request.POST)
-        title = request.POST["title"]
-        content = request.POST["content"]
-        # Search for duplicate
-        if find_entry(title) is None:
-            util.save_entry(title, content)
-            return redirect("entry", title=title)
-        else:
-            return render(
-                request,
-                "encyclopedia/create.html",
-                {
-                    "errormessage": "An existing entry already exists.",
-                    "form": CreateForm(),
-                },
-            )
+        if new_entry.is_valid():
+            title = new_entry.cleaned_data['title']
+            content = new_entry.cleaned_data['content']
+            # Search for duplicate
+            if find_entry(title) is None:
+                util.save_entry(title, content)
+                return redirect("entry", title=title)
+            else:
+                return render(
+                    request,
+                    "encyclopedia/create.html",
+                    {
+                        "errormessage": "An existing entry already exists.",
+                        "form": new_entry,
+                    },
+                )
     else:
-        return render(
-            request,
-            "encyclopedia/create.html",
-            {"errormessage": False, "form": CreateForm()},
-        )
+        new_entry = CreateForm()
+    return render(
+        request,
+        "encyclopedia/create.html",
+        {"form": new_entry},
+    )
 
 
 def edit(request, title):
@@ -66,7 +68,7 @@ def edit(request, title):
         )
 
 
-def random_page(request):
+def random_page0(request):
     entries = util.list_entries()
     rand = randint(0, len(entries) - 1)
     random_entry = entries[rand]
@@ -78,6 +80,11 @@ def random_page(request):
             "content": markdown2.markdown(util.get_entry(random_entry)),
         },
     )
+def random_page(request):
+    entries = util.list_entries()
+    rand = randint(0, len(entries) - 1)
+    random_entry = entries[rand]
+    return redirect('entry', title=random_entry)
 
 
 def entry(request, title):
