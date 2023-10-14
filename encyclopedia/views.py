@@ -48,26 +48,29 @@ def search(request):
 def random(request):
     return redirect("entry", choice(util.list_entries()))
 
-def edit(request):
-    if request.method == "POST":
-        title = request.POST.get("title")
-        return render(request, "encyclopedia/edit.html", {
-            'title': title,
-            'content': util.get_entry(title)
-        })
+def edit0(request, title):
+    return render(request, "encyclopedia/edit.html", {
+        'title': title,
+        'content': util.get_entry(title)
+    })
     
-def save(request):
+def save0(request, title):
     if request.method == "POST":
-        title = request.POST.get("title").strip()
         content = request.POST.get("content").strip()
         util.save_entry(title, content)
+        return redirect('entry', title)
 
-        content = markdown(content)
-        return render(request, "encyclopedia/entry.html", {
-            "title": title,
-            "content": content
-        })
 
+def edit(request, title):
+    if request.method == "POST":
+        content = request.POST.get("content").strip()
+        util.save_entry(title, content)
+        return redirect('entry', title)
+    return render(request, "encyclopedia/edit.html", {
+        'title': title,
+        'content': util.get_entry(title)
+    })
+    
 def create(request):
     if request.method == "GET":
         return render(request, "encyclopedia/create.html")
