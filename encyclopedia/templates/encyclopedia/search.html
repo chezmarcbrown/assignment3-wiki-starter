@@ -5,11 +5,11 @@ Encyclopedia
 {% endblock %}
 
 {% block body %}
-<h1>All Pages</h1>
+<h1>Results</h1>
 
-<ul class="list-group list-group-flush">
-    {% for entry in entries %}
-    <li class="list-group-item">
+<ul>
+    {% for entry in result %}
+    <li>
         <a href="{% url 'entry' entry %}">{{ entry }}</a>
     </li>
 
