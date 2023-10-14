@@ -8,9 +8,7 @@ Encyclopedia
 <h1>{{title | safe}}</h1>
     <p>{{content | safe}}</p>
 
-    <form action="{% url 'edit_page' %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="enter_title" value="{{title}}">
+    <form action="{% url 'edit_page' title %}" method="GET">
         <input type="submit" value="Edit" class="btn btn-primary">
     </form>
 

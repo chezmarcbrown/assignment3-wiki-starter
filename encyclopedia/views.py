@@ -1,7 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import markdown
 import random
-
 from . import util
 
 def convert_to_html(page_title):
@@ -61,35 +60,40 @@ def newpage(request):
                           {"message": "This entry already exists"})
 
         util.save_entry(page, info)
-        converted_info = convert_to_html(page)
-        return render(request, "encyclopedia/entry.html", 
-                      {"title": page, "content": converted_info})
+        return redirect('entry', title=page)
+        # converted_info = convert_to_html(page)
+        # return render(request, "encyclopedia/entry.html", 
+        #               {"title": page, "content": converted_info})
 
             
 def get_random(request):
     entries = util.list_entries()
     rand_entry = random.choice(entries)
-    body = convert_to_html(rand_entry)
-    return render(request, "encyclopedia/entry.html", {
-        "title": rand_entry,
-        "content": body
-    })
+    return redirect('entry', title=rand_entry)
+    # body = convert_to_html(rand_entry)
+    # return render(request, "encyclopedia/entry.html", {
+    #     "title": rand_entry,
+    #     "content": body
+    # })
 
-def edit_page(request):
+def edit_page(request, title):
     if request.method == 'POST':
-        title = request.POST['enter_title']
+        body = request.POST['content']
+        util.save_entry(title, body)
+        return redirect('entry', title)
+    else:
         content = util.get_entry(title)
         return render(request, "encyclopedia/edit.html", {
             "title": title,
             "content": content
         })
-    
-def save_page(request):
-    if request.method =="POST":
-        title = request.POST['title']
-        body = request.POST['content']
-        util.save_entry(title, body)
-        return render(request, "encyclopedia/entry.html", {
-        "title": title,
-        "content": body
-    })
+
+# def save_page(request):
+#     if request.method =="POST":
+#         title = request.POST['title']
+#         body = request.POST['content']
+#         util.save_entry(title, body)
+#         return render(request, "encyclopedia/entry.html", {
+#         "title": title,
+#         "content": body
+#     })
