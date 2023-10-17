@@ -1,3 +1,4 @@
+from django import forms
 from django.shortcuts import render, redirect
 from django import forms
 from markdown2 import markdown
@@ -51,6 +52,42 @@ def new_entry(request):
         return redirect('entry', title=title)
 
     return render(request, 'encyclopedia/new_entry.html')
+
+
+
+class CreateForm(forms.Form):
+    title = forms.CharField(
+        label="Title",
+        widget=forms.TextInput(
+            attrs={"style": "width: 300px;", "class": "form-control"}
+        ),
+    )
+    content = forms.CharField(
+        label="Content (Markdown)",
+        widget=forms.Textarea(
+            attrs={"style": "width: 600px;", "class": "form-control"}
+        ),
+    )
+
+def new_entry_form(request):
+    if request.method == "POST":
+        new_entry = CreateForm(request.POST)
+        if new_entry.is_valid():
+            title = new_entry.cleaned_data['title']
+            content = new_entry.cleaned_data['content']
+            # Search for duplicate
+            if get_entry(title) is None:
+                util.save_entry(title, content)
+                return redirect("entry", title=title)
+            else:
+                return render(request, "encyclopedia/new_entry_form.html",
+                    { "error": "An entry with this title already exists. Please choose a different title.",
+                        "form": new_entry},
+                )
+    else:
+        new_entry = CreateForm()
+    return render(request, "encyclopedia/new_entry_form.html", {"form": new_entry})
+
 
 def edit_entry(request, title):
     if request.method == 'POST':
