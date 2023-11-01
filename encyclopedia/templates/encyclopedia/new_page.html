@@ -1,0 +1,41 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    New Page
+{% endblock %}
+
+{% block body %}
+    <div>
+        <h1>New Page</h1>
+            <p>Enter in the name and contents for your new entry below.</p>
+    </div>
+    <div>
+        {% if errormsg %}
+            <p class="error">{{ errormsg }}</p>
+        {% endif %}
+
+        <form action="{% url 'new_page' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <!-- <p>
+                <label for="entry_name">Name</label>
+                <input type="text" name="entry_name" placeholder="Enter name here">                
+            </p>
+            <p>
+                <label for="entry_content">Content</label>
+            </p>
+            <textarea name="entry_content" rows="20" cols="50" placeholder="Enter content here"></textarea>
+            <p> -->
+            <input type="submit" value="Create New Page">
+            </p>
+        </form>
+    </div>
+    <!-- <div>
+        <form>
+            <label for="entry_content">Content</label>
+            <textarea name="entry_content" placeholder="Enter content here"></textarea>
+        </form>    
+    </div> -->
+    
+    
+{% endblock%}

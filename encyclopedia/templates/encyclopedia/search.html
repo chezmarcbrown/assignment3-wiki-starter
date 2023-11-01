@@ -1,0 +1,26 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block body %}
+    <h1>
+        
+        Your query, "{{ query }}" does not exist.
+    </h1>
+    <p>
+        {% if not results %}
+            Please enter another query.
+        {% else %}
+            Here is a list of entries that may be similar to your query:
+        <ul>
+            {% for r in results %}
+                <li><a href="wiki/{{ r }}">{{ r }}</a></li>
+            {% endfor %}
+        </ul>    
+    </p>
+        
+    {% endif %}
+
+{% endblock %}
