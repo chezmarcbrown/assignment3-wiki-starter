@@ -1,0 +1,23 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{ entry_title }}
+{% endblock %}
+
+{% block body %}
+    <div>
+        {% if entry_title not in entries %}
+            <h1>Entry does not exist</h1>
+            <p>
+                The entry you requested does not exist.
+            </p>
+        {% else %}
+            <p>{{ entry_content|safe }}</p>
+            <p>
+                <a href="{% url 'edit_page' entry_title %}">Edit Page Contents</a>
+            </p>
+        {% endif %}
+
+
+    </div>
+{% endblock %}
