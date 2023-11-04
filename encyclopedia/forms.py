@@ -1,6 +1,6 @@
 from django import forms
 
-class newEntry(forms.Form):
+class NewEntryForm(forms.Form):
     title = forms.CharField(widget=forms.TextInput, label="Title", min_length=1)
     content = forms.CharField(widget=forms.Textarea, label="Content", min_length=1)
 
@@ -19,7 +19,7 @@ class newEntry(forms.Form):
             
         return self.cleaned_data
     
-class editEntry(forms.Form):
+class EditEntryForm(forms.Form):
 
     def __init__(self,*args,**kwargs):
         self.old_content = kwargs.pop('old_content')

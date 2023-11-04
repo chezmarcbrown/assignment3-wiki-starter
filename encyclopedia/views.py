@@ -3,7 +3,7 @@ from django.contrib import messages
 from . import util
 import markdown2
 import random
-from .forms import newEntry, editEntry
+from .forms import NewEntryForm, EditEntryForm
 
 def index(request):
     entries = util.list_entries()
@@ -38,7 +38,7 @@ def random_page(request):
 def new_page(request):
     entries = util.list_entries()
     if request.method == "POST":
-        form = newEntry(request.POST)
+        form = NewEntryForm(request.POST)
         if form.is_valid():
             entry_title = form.cleaned_data['title']
             entry_content = form.cleaned_data['content'].encode()
@@ -52,13 +52,13 @@ def new_page(request):
             return redirect("index")
         else:
             return render(request, "encyclopedia/new_page.html",{"form": form})
-    return render(request,"encyclopedia/new_page.html", {"form": newEntry()})
+    return render(request,"encyclopedia/new_page.html", {"form": NewEntryForm()})
 
 def edit_page(request, entry_title):
     old_content = util.get_entry(entry_title)
 
     if request.method == "POST":
-        form = editEntry(request.POST, old_content=old_content)
+        form = EidtEntryForm(request.POST, old_content=old_content)
         if form.is_valid():
             entry_content = form.cleaned_data['content'].encode()
             
@@ -67,13 +67,14 @@ def edit_page(request, entry_title):
         else:
             return render(request, "encyclopedia/edit_page.html",{"form": form, "entry_title": entry_title})
     return render(request,"encyclopedia/edit_page.html", {
-        "form": editEntry(old_content=old_content),
+        "form": EidtEntryForm(old_content=old_content),
         "entry_title": entry_title
         })
 
 def search(request):
     entries = util.list_entries()
     results = []
+    query = '' # otherwise, will crash if this is called with method != GET
 
     if request.method == "GET":
         query = request.GET.get('q')
